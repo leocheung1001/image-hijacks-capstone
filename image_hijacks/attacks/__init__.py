@@ -34,7 +34,9 @@ class AttackDriver(LightningModule, ABC):
         self.processor = self.config.processor_factory(self.config).requires_grad_(
             False
         )
-
+        # print("*" * 50)
+        # print(self.config.target_models_train)
+        # print("*" * 50)
         self.train_models: Dict[str, AbstractLensModel] = nn.ModuleDict(  # type: ignore
             self.config.target_models_train
         )
