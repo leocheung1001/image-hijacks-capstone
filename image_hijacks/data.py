@@ -97,9 +97,9 @@ class ContextLabelDataModule(LightningDataModule, ABC):
         super().__init__()
         self.config = config
         self.target_model = target_model
-        print("*" * 50)
-        print(self.target_model)
-        print("*" * 50)
+        # print("*" * 50)
+        # print(self.target_model)
+        # print("*" * 50)
 
     @abstractmethod
     def get_dataset(self) -> Dict[str, Tuple[List[str], List[str]]]:
