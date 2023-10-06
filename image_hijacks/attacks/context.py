@@ -156,7 +156,7 @@ class ContextAttack(AttackDriver, ABC):
                 input_token_len = model.tokenize(
                     c,
                     mode="encoder",
-                    randomly_sample_system_prompt=self.config.randomly_sample_system_prompt,
+                    # randomly_sample_system_prompt=self.config.randomly_sample_system_prompt,
                 )[0].shape[-1]
                 if not attack_successful:
                     self.failed_lens_table.add_data(k, input_token_len, dataset)

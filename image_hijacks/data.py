@@ -116,7 +116,7 @@ class ContextLabelDataModule(LightningDataModule, ABC):
                     contexts,
                     mode="encoder",
                     max_length=self.config.train_max_length,
-                    randomly_sample_system_prompt=self.config.randomly_sample_system_prompt,
+                    #randomly_sample_system_prompt=self.config.randomly_sample_system_prompt,
                 ),
                 *self.target_model.tokenize(
                     labels,

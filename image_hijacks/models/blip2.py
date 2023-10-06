@@ -388,7 +388,7 @@ class Blip2LensEncDec(
         - Decoder:
             [BOS] 0 1 2
             [BOS] 0 1
-        BOS_ID = self.config.text_config.decoder_start_token_id
+        BOS_ID = 1 # self.config.text_config.decoder_start_token_id
         """
         if mode == "encoder":
             results = self.tokenizer(
@@ -401,7 +401,7 @@ class Blip2LensEncDec(
             input_ids: Int64[Tensor, "b seq_len"] = results["input_ids"]  # type: ignore
             attn_mask: Int64[Tensor, "b seq_len"] = results["attention_mask"]  # type: ignore
         elif mode == "decoder":
-            BOS_ID = self.config.text_config.decoder_start_token_id
+            BOS_ID = 1 # self.config.text_config.decoder_start_token_id
             assert BOS_ID is not None
             results = self.tokenizer(
                 text,
@@ -453,8 +453,8 @@ class Blip2LensEncDec(
         return self.model.language_model(
             inputs_embeds=input_embeddings,
             attention_mask=attention_mask,
-            decoder_input_ids=decoder_input_ids,
-            decoder_attention_mask=decoder_attention_mask,
+            # decoder_input_ids=decoder_input_ids,
+            # decoder_attention_mask=decoder_attention_mask,
             return_dict=True,
         ).logits
 
@@ -486,7 +486,7 @@ class Blip2LensDecOnly(
           [BOS] 0 1 0 1
         (n.b. the decoder BOS is stripped and included only for ease of logit handling)
         """
-        BOS_ID = self.config.text_config.bos_token_id
+        BOS_ID = 1 # self.config.text_config.bos_token_id
         assert self.tokenizer.padding_side == "left"
         if mode == "encoder":
             results = self.tokenizer(
