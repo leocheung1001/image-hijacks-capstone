@@ -32,7 +32,7 @@ from image_hijacks.utils import load_config_list
 def cli():
     pass
 
-
+# LTT: wandb
 def transform_dict(config_dict: Dict, expand: bool = True):
     """
     General function to transform any dictionary into wandb config acceptable format
@@ -127,8 +127,8 @@ def train(
     exp_name = exp_path.name
     print(f"Experiment {exp_name}")
     print(f"Loading config from {config_path}")
-    configs = load_config_list(config_path)
-    run_name, cfg_gen = configs[job_id]
+    configs = load_config_list(config_path) # LTT: important
+    run_name, cfg_gen = configs[job_id] #LTT: cfg_gen is a callable
     config = cfg_gen()
 
     print(f"Run {run_name}")
@@ -224,10 +224,10 @@ def train(
         **trainer_args,
         **config.trainer_args,
     )
-    attack_driver = config.attack_driver_factory(config)
-    datamodule = attack_driver.get_datamodule()
+    attack_driver = config.attack_driver_factory(config) #LTT: an instance of SpecificOutputStringAttack
+    datamodule = attack_driver.get_datamodule() #LTT: encapsulates the data loading
     trainer.validate(attack_driver, datamodule)
-    trainer.fit(attack_driver, datamodule)
+    trainer.fit(attack_driver, datamodule) #LTT: actual training
     print("Val: Best model")
     trainer.validate(attack_driver, datamodule, ckpt_path="best")
     print("Val: Last model")

@@ -49,6 +49,7 @@ MODEL_IDS: Dict[str, ModelDownloader] = {
     "llava-v1.3-13b-336px": hf(
         "liuhaotian/llava-v1-0719-336px-lora-merge-vicuna-13b-v1.3"
     ),
+    "test-7b": hf("liuhaotian/LLaVA-Lightning-MPT-7B-preview")
 }
 
 

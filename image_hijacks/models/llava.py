@@ -102,7 +102,7 @@ class LlavaLens(AbstractLensModel):
 
     def tokeniser_ids_to_llava_input(
         self, input_ids: Int64[Union[Tensor, ndarray], "b max_seq_len"]
-    ) -> None:
+    ) -> None: #LTT: deals with the language part of the model's inputs
         # WARNING: in-place update
         image_token_id = self.tokenizer.convert_tokens_to_ids(LlavaLens.IMAGE_TOKEN)
         input_ids[input_ids == image_token_id] = IMAGE_TOKEN_INDEX
@@ -475,7 +475,7 @@ class LlavaLens(AbstractLensModel):
         model.requires_grad_(requires_grad)
 
         CLIPVisionTower.forward = remove_no_grad(CLIPVisionTower.forward)
-        return cls(model, tokenizer, image_processor, model_dtype)
+        return cls(model, tokenizer, image_processor, model_dtype) #LTT: an instance of LlavaLens is returned
 
     # ====== TODO (needed for more advanced attacks) ======
 
@@ -578,7 +578,7 @@ class LlavaLlama2_7b(LlavaLens):
         )
 
 
-class LlavaLlama1_13b(LlavaLens):
+class LlavaLlama1_13b(LlavaLens): #LTT: LlavaLens --> AbstractLensModel
     def wrap_with_system_prompt(self, random: bool = False) -> Callable[[str], str]:
         if random:
             return super().wrap_with_system_prompt(random)
@@ -598,6 +598,31 @@ class LlavaLlama1_13b(LlavaLens):
     ) -> "LlavaLlama1_13b":
         return cls.load_model_from_path(
             PROJECT_ROOT / "downloads/model_checkpoints/llava-v1.3-13b-336px",
+            model_dtype=model_dtype,
+            requires_grad=requires_grad,
+        )
+
+
+class test_7b(LlavaLens):
+    def wrap_with_system_prompt(self, random: bool = False) -> Callable[[str], str]:
+        if random:
+            return super().wrap_with_system_prompt(random)
+        else:
+            print("WARNING: Original LLaVA-v1 prompt unknown")
+            return lambda x: (
+                f"A chat between a curious user and an artificial intelligence assistant. "
+                f"The assistant gives helpful, detailed, and polite answers to the user's questions. "
+                f"USER: {LlavaLens.IMAGE_TOKEN}\n{x} ASSISTANT:"
+            )  # TODO: uncertain if this is right prompt
+
+    @classmethod
+    def load_model(
+        cls,
+        model_dtype: torch.dtype = torch.half,
+        requires_grad: bool = False,
+    ) -> "test_7b":
+        return cls.load_model_from_path(
+            PROJECT_ROOT / "downloads/model_checkpoints/test-7b",
             model_dtype=model_dtype,
             requires_grad=requires_grad,
         )
