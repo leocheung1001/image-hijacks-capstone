@@ -23,7 +23,7 @@ class AbstractLensModel(ABC, nn.Module):
     def train(self, mode: bool):
         """avoid pytorch lightning auto set train mode"""
         # TODO: get rid of this hack
-        return super().train(False)
+        return super().train(False) #LTT: always sets the model to evaluation mode
 
     # === Pre/post-processing ===
     @abstractmethod

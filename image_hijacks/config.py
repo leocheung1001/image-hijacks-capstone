@@ -141,7 +141,7 @@ class Config:
     #   Warning: any lower and float16 doesn't like it
     
     # - IterFGSMOptimizer
-    iterfgsm_alpha: float = 1.0 / 255
+    iterfgsm_alpha: float = 1.0 / 255 # LTT: Specific optimizer settings
     
 # === Dataset ===
     context_data_module_train: Type[ContextLabelDataModule] = WikitextDataModule

@@ -3,7 +3,7 @@ from typing import Callable, List, Optional, Sequence, Tuple, Union
 from image_hijacks.config import Config, Transform
 import image_hijacks.config as cfg
 from image_hijacks.data import AlpacaDataModule, AlpacaLlavaDataModule, LlavaDataModule
-from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_13b
+from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_13b, test_7b
 from image_hijacks.utils import PROJECT_ROOT
 from image_hijacks.attacks.context import (
     ContextLabelAttack,
@@ -42,10 +42,15 @@ def load_model_llama_2():
 def load_model_llama_1():
     return LlavaLlama1_13b.load_model(model_dtype=torch.half)
 
+@functools.lru_cache
+def test_7b():
+    return test_7b.load_model(model_dtype=torch.half)
+
 
 MODELS = {
     "llava-llama2-13b": load_model_llama_2,
     "llava-llama1-13b": load_model_llama_1,
+    "test_7b": test_7b,
 }
 
 # Attacks
@@ -161,6 +166,12 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         (
             f"llava2_{t.key}" if t.key is not None else "",
             lambda t=t: init_config(t, "llava-llama2-13b"),
+        )
+        for t in transforms
+    ] + [
+        (
+            f"test_{t.key}" if t.key is not None else "",
+            lambda t=t: init_config(t, "test_7b"),
         )
         for t in transforms
     ]
