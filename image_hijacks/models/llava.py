@@ -485,6 +485,11 @@ class LlavaLens(AbstractLensModel):
         requires_grad: bool = False,
         model_name = "llava-llama-2-7b-chat-lightning-lora-preview"):
         tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto")
+        tokenizer.add_special_tokens(
+            {
+                "additional_special_tokens": [LlavaLens.IMAGE_TOKEN], "pad_token": "<pad>"}
+        )
+        model.resize_token_embeddings(len(tokenizer))
         # kwargs = {"device_map": device_map}
         # if device != "cuda":
         #     kwargs['device_map'] = {"": device}

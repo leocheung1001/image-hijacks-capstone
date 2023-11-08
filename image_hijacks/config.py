@@ -191,7 +191,8 @@ class Config:
 # === Training ===
     clip_grad_mag: Optional[float] = None
     #   (L2 norm to use for grad clipping, if None then no clipping is used.)
-    lr: float = 0.005
+    #lr: float = 0.005
+    lr: float = 0.03
     epochs: int = 100
     #   (Number of times to iterate over train_contexts. If train_contexts is
     #   no context, then this number should be very high, e.g. 4000.)
