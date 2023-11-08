@@ -635,7 +635,7 @@ class LlavaLlama2_7b(LlavaLens):
         return cls.lora_load_model_from_path(
             PROJECT_ROOT / "downloads/model_checkpoints/llava-llama-2-7b-chat",
             model_dtype=model_dtype,
-            model_base = "llama-2-7b-chat",
+            model_base = "meta-llama/Llama-2-7b-chat-hf",
             requires_grad=requires_grad,
         )
 
