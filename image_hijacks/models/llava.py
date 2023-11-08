@@ -477,6 +477,67 @@ class LlavaLens(AbstractLensModel):
         CLIPVisionTower.forward = remove_no_grad(CLIPVisionTower.forward)
         return cls(model, tokenizer, image_processor, model_dtype) #LTT: an instance of LlavaLens is returned
 
+    @classmethod 
+    def lora_load_model_from_path(cls: "Type[LlavaLensT]",
+        model_path: Path,
+        model_dtype: torch.dtype = torch.half,
+        model_base = "meta-llama/Llama-2-7b-chat-hf",
+        requires_grad: bool = False,
+        model_name = "llava-llama-2-7b-chat-lightning-lora-preview"):
+        tokenizer, model, image_processor, context_len = load_pretrained_model(model_path, model_base, model_name, load_8bit=False, load_4bit=False, device_map="auto")
+        # kwargs = {"device_map": device_map}
+        # if device != "cuda":
+        #     kwargs['device_map'] = {"": device}
+
+        # if load_8bit:
+        #     kwargs['load_in_8bit'] = True
+        # elif load_4bit:
+        #     kwargs['load_in_4bit'] = True
+        #     kwargs['quantization_config'] = BitsAndBytesConfig(
+        #         load_in_4bit=True,
+        #         bnb_4bit_compute_dtype=torch.float16,
+        #         bnb_4bit_use_double_quant=True,
+        #         bnb_4bit_quant_type='nf4'
+        #     )
+        # else:
+        #     kwargs['torch_dtype'] = torch.float16
+        # lora_cfg_pretrained = AutoConfig.from_pretrained(model_path)
+        # tokenizer = AutoTokenizer.from_pretrained(model_base, use_fast=False)
+        # print('Loading LLaVA from base model...')
+        # model = LlavaLlamaForCausalLM.from_pretrained(model_base, low_cpu_mem_usage=True, config=lora_cfg_pretrained, **kwargs)
+        # token_num, tokem_dim = model.lm_head.out_features, model.lm_head.in_features
+        # if model.lm_head.weight.shape[0] != token_num:
+        #     model.lm_head.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+        #     model.model.embed_tokens.weight = torch.nn.Parameter(torch.empty(token_num, tokem_dim, device=model.device, dtype=model.dtype))
+
+        # print('Loading additional LLaVA weights...')
+        # if os.path.exists(os.path.join(model_path, 'non_lora_trainables.bin')):
+        #     non_lora_trainables = torch.load(os.path.join(model_path, 'non_lora_trainables.bin'), map_location='cpu')
+        # else:
+        #     # this is probably from HF Hub
+        #     from huggingface_hub import hf_hub_download
+        #     def load_from_hf(repo_id, filename, subfolder=None):
+        #         cache_file = hf_hub_download(
+        #             repo_id=repo_id,
+        #             filename=filename,
+        #             subfolder=subfolder)
+        #         return torch.load(cache_file, map_location='cpu')
+        #     non_lora_trainables = load_from_hf(model_path, 'non_lora_trainables.bin')
+        # non_lora_trainables = {(k[11:] if k.startswith('base_model.') else k): v for k, v in non_lora_trainables.items()}
+        # if any(k.startswith('model.model.') for k in non_lora_trainables):
+        #     non_lora_trainables = {(k[6:] if k.startswith('model.') else k): v for k, v in non_lora_trainables.items()}
+        # model.load_state_dict(non_lora_trainables, strict=False)
+
+        # from peft import PeftModel
+        # print('Loading LoRA weights...')
+        # model = PeftModel.from_pretrained(model, model_path)
+        # print('Merging LoRA weights...')
+        # model = model.merge_and_unload()
+        # print('Model is loaded...')
+        # image_processor = None
+        return cls(model, tokenizer, image_processor, model_dtype)
+
+
     # ====== TODO (needed for more advanced attacks) ======
 
     # === Embeddings ===
@@ -571,9 +632,10 @@ class LlavaLlama2_7b(LlavaLens):
         model_dtype: torch.dtype = torch.half,
         requires_grad: bool = False,
     ) -> "LlavaLlama2_7b":
-        return cls.load_model_from_path(
+        return cls.lora_load_model_from_path(
             PROJECT_ROOT / "downloads/model_checkpoints/llava-llama-2-7b-chat",
             model_dtype=model_dtype,
+            model_base = "llama-2-7b-chat",
             requires_grad=requires_grad,
         )
 
