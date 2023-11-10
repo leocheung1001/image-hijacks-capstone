@@ -129,7 +129,7 @@ def train(
     print(f"Loading config from {config_path}")
     configs = load_config_list(config_path) # LTT: important
     run_name, cfg_gen = configs[job_id] #LTT: cfg_gen is a callable
-    config = cfg_gen()
+    config = cfg_gen() # LTT: here config is the experiment config, which based on main config
 
     print(f"Run {run_name}")
     seed_everything(config.seed)

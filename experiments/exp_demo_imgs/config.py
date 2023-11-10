@@ -118,9 +118,9 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
             seed=1337070900,
             randomly_sample_system_prompt=True,
         )
-        cfg.opt_sgd(config)
+        cfg.opt_adam(config)
         transform.apply(config)
-        return config
+        return config # optimizer is already set
 
     def sweep_attacks(cur_keys: List[str]) -> List[Transform]:
         return [
@@ -149,7 +149,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         ]
 
     def sweep_lr(cur_keys: List[str]) -> List[Transform]:
-        sweep_lrs = ["3e-2"]
+        sweep_lrs = ["3"]
         return [
             Transform(lambda c, lr=lr: cfg.set_lr(c, float(lr)), f"lr_{lr}")
             for lr in sweep_lrs

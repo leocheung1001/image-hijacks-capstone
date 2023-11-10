@@ -631,6 +631,16 @@ class LlavaLlama2_13b(LlavaLens):
 
 
 class LlavaLlama2_7b(LlavaLens):
+    def wrap_with_system_prompt(self, random: bool = False) -> Callable[[str], str]:
+        if random:
+            return super().wrap_with_system_prompt(random)
+        else:
+            return lambda text: (  # LLaVA-2 prompt
+                f"[INST] <<SYS>>\nYou are a helpful language and vision assistant. You are able to understand "
+                f"the visual content that the user provides, and assist the user with a variety of tasks using "
+                f"natural language.\n<</SYS>>\n\n{LlavaLens.IMAGE_TOKEN}\n{text} [/INST]"
+            )
+            
     @classmethod
     def load_model(
         cls,
