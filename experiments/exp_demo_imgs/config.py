@@ -51,7 +51,7 @@ def load_model_llama_7b():
 MODELS = {
     "llava-llama2-13b": load_model_llama_2,
     "llava-llama1-13b": load_model_llama_1,
-    "llava-llama1-7b": load_model_llama_7b
+    "llava-llama2-7b": load_model_llama_7b
 }
 
 # Attacks
@@ -118,7 +118,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
             seed=1337070900,
             randomly_sample_system_prompt=True,
         )
-        cfg.opt_adam(config)
+        cfg.opt_sgd(config)
         transform.apply(config)
         return config # optimizer is already set
 
@@ -149,7 +149,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         ]
 
     def sweep_lr(cur_keys: List[str]) -> List[Transform]:
-        sweep_lrs = ["3"]
+        sweep_lrs = ["3e-2"]
         return [
             Transform(lambda c, lr=lr: cfg.set_lr(c, float(lr)), f"lr_{lr}")
             for lr in sweep_lrs
@@ -172,7 +172,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
     ] + [
         (
             f"llava_7b_{t.key}" if t.key is not None else "",
-            lambda t=t: init_config(t, "llava-llama1-7b"),
+            lambda t=t: init_config(t, "llava-llama2-7b"),
         )
         for t in transforms
     ] 
