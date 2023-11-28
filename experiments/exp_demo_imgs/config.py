@@ -21,6 +21,14 @@ import functools
 
 # Images
 
+ORIGINAL_IMAGE = Image.open(
+    PROJECT_ROOT / "experiments/exp_demo_imgs/original/wolf.png"
+).convert("RGB")
+
+ADDITIONAL_IMAGE = Image.open(
+    PROJECT_ROOT / "experiments/exp_demo_imgs/additional_images/dog.jpeg"
+).convert("RGB")
+
 EIFFEL_IMAGE = Image.open(
     PROJECT_ROOT / "experiments/exp_demo_imgs/e_tower.png"
 ).convert("RGB")
@@ -105,7 +113,7 @@ def attack_specific_string_alpaca(config: Config):
 
     # Epochs
     config.epochs = 1
-    config.validate_every = (2000, "steps")
+    config.validate_every = (500, "steps")
     config.batch_size = 1
     config.eval_batch_size = 4
 
@@ -135,8 +143,8 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         return [
             Transform(
                 [
-                    cfg.proc_learnable_image,
-                    lambda c: cfg.set_input_image(c, EIFFEL_IMAGE),
+                    cfg.proc_patch_static,
+                    lambda c: cfg.set_input_image(c, ADDITIONAL_IMAGE),
                 ],
                 "pat_full",
             )
@@ -149,7 +157,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         ]
 
     def sweep_lr(cur_keys: List[str]) -> List[Transform]:
-        sweep_lrs = ["3e-2"]
+        sweep_lrs = ["3"]
         return [
             Transform(lambda c, lr=lr: cfg.set_lr(c, float(lr)), f"lr_{lr}")
             for lr in sweep_lrs
