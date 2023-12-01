@@ -274,7 +274,7 @@ def compose_sweeps(
 def proc_learnable_image(config: Config):
     config.processor_factory = LearnedImageProcessor
 
-def proc_patch_static(config: Config, patch_h: int = 150, patch_w: int = 150, rel_r: float = 0.2, rel_c: float = 0.5):
+def proc_patch_static(config: Config, patch_h: int = 120, patch_w: int = 120, rel_r: float = 0.3, rel_c: float = 0.4):
     config.processor_factory = StaticPatchImageProcessor
     config.init_patch = Factory(lambda _: torch.rand(1, 3, patch_h, patch_w))
     config.static_patch_loc = StaticPatchImageProcessor.center_patch_at(r=rel_r, c=rel_c, relative=True)

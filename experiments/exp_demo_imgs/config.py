@@ -26,7 +26,7 @@ ORIGINAL_IMAGE = Image.open(
 ).convert("RGB")
 
 ADDITIONAL_IMAGE = Image.open(
-    PROJECT_ROOT / "experiments/exp_demo_imgs/additional_images/dog.jpeg"
+    PROJECT_ROOT / "experiments/exp_demo_imgs/additional_images/lighthouse.jpeg"
 ).convert("RGB")
 
 EIFFEL_IMAGE = Image.open(
