@@ -29,6 +29,10 @@ ADDITIONAL_IMAGE = Image.open(
     PROJECT_ROOT / "experiments/exp_demo_imgs/additional_images/lighthouse.jpeg"
 ).convert("RGB")
 
+IMAGENET_IMAGE = Image.open(
+    PROJECT_ROOT / "experiments/exp_demo_imgs/imagenet_val/ILSVRC2012_val_00000018.JPEG"
+).convert("RGB")
+
 EIFFEL_IMAGE = Image.open(
     PROJECT_ROOT / "experiments/exp_demo_imgs/e_tower.png"
 ).convert("RGB")
@@ -126,7 +130,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
             seed=1337070900,
             randomly_sample_system_prompt=True,
         )
-        cfg.opt_sgd(config)
+        cfg.opt_adam(config)
         transform.apply(config)
         return config # optimizer is already set
 
@@ -144,7 +148,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
             Transform(
                 [
                     cfg.proc_patch_static,
-                    lambda c: cfg.set_input_image(c, ADDITIONAL_IMAGE),
+                    lambda c: cfg.set_input_image(c, IMAGENET_IMAGE),
                 ],
                 "pat_full",
             )
