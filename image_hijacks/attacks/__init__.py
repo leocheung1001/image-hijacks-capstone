@@ -38,7 +38,7 @@ class AttackDriver(LightningModule, ABC):
         # print(self.config.target_models_train)
         # print("*" * 50)
         self.train_models: Dict[str, AbstractLensModel] = nn.ModuleDict(  # type: ignore
-            self.config.target_models_train
+            self.config.target_models_train #LTT: the target model of attack
         )
         self.train_models.requires_grad_(False)
         self.eval_models: Dict[str, AbstractLensModel] = nn.ModuleDict(  # type: ignore
@@ -48,7 +48,7 @@ class AttackDriver(LightningModule, ABC):
 
         self.loss_fn = self.config.loss_fn_factory(self.config)
         self.gradient_estimator = self.config.gradient_estimator_factory(self.config)
-        self.attack_optimizer = self.config.attack_optimizer_factory(self.config)
+        self.attack_optimizer = self.config.attack_optimizer_factory(self.config) #LTT: customize optimizer?
 
     def on_save_checkpoint(self, checkpoint: Dict[str, Any]) -> None:
         keys = list(checkpoint["state_dict"].keys())

@@ -267,7 +267,7 @@ class ContextLabelAttack(ContextAttack):
         return [t.strip() in p for t, p in zip(true_output, pred_output)]
 
 
-class SpecificOutputStringAttack(ContextAttack):
+class SpecificOutputStringAttack(ContextAttack): #LTT: ContextAttack --> AttackDriver
     def get_attack_target(self, context: str) -> str:
         return self.config.target_string
 

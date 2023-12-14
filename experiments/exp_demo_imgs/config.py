@@ -3,8 +3,7 @@ from typing import Callable, List, Optional, Sequence, Tuple, Union
 from image_hijacks.config import Config, Transform
 import image_hijacks.config as cfg
 from image_hijacks.data import AlpacaDataModule, AlpacaLlavaDataModule, LlavaDataModule
-from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_13b
-from image_hijacks.models.blip2 import Blip2Opt2p7b, Blip2FlanT5Xl
+from image_hijacks.models.llava import LlavaLlama1_13b, LlavaLlama2_13b, LlavaLlama2_7b
 from image_hijacks.utils import PROJECT_ROOT
 from image_hijacks.attacks.context import (
     ContextLabelAttack,
@@ -43,16 +42,16 @@ def load_model_llama_2():
 def load_model_llama_1():
     return LlavaLlama1_13b.load_model(model_dtype=torch.half)
 
-
 @functools.lru_cache
-def load_model_blip2_opt27():
-    return Blip2Opt2p7b.load_model(model_dtype=torch.half)
+def load_model_llama_7b():
+    return LlavaLlama2_7b.load_model(model_dtype=torch.half)
+
 
 
 MODELS = {
     "llava-llama2-13b": load_model_llama_2,
     "llava-llama1-13b": load_model_llama_1,
-    "blip2-opt-2-7b": load_model_blip2_opt27
+    "llava-llama2-7b": load_model_llama_7b
 }
 
 # Attacks
@@ -121,7 +120,7 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         )
         cfg.opt_sgd(config)
         transform.apply(config)
-        return config
+        return config # optimizer is already set
 
     def sweep_attacks(cur_keys: List[str]) -> List[Transform]:
         return [
@@ -172,11 +171,11 @@ def gen_configs() -> List[Tuple[str, Callable[[], Config]]]:
         for t in transforms
     ] + [
         (
-            f"blip2_{t.key}" if t.key is not None else "",
-            lambda t=t: init_config(t, "blip2-opt-2-7b"),
+            f"llava_7b_{t.key}" if t.key is not None else "",
+            lambda t=t: init_config(t, "llava-llama2-7b"),
         )
         for t in transforms
-    ]
+    ] 
 
 
 if __name__ == "__main__":

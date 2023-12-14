@@ -96,14 +96,14 @@ def all_equal(
 
 def load_config_list(
     config_path: Path,
-) -> List[Tuple[str, Callable[[], Config]]]:
+) -> List[Tuple[str, Callable[[], Config]]]: #LTT: [(str, callable), ()] a string representing the name of a configuration run, and a callable that when called, returns an instance of Config
     # https://stackoverflow.com/questions/67631/how-can-i-import-a-module-dynamically-given-the-full-path
     module_name = f"experiment_config_{str(int(time.time()))}"
     spec = importlib.util.spec_from_file_location(module_name, config_path)
     assert spec is not None and spec.loader is not None
     config_module = importlib.util.module_from_spec(spec)
     sys.modules[module_name] = config_module
-    spec.loader.exec_module(config_module)
+    spec.loader.exec_module(config_module) #LTT: This line actually loads the module by executing its code within the new module's namespace
     return config_module.gen_configs()
 
 
