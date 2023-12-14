@@ -19,8 +19,8 @@ To effectively run the code in this repository, the following resource configura
 - Disk Storage: At least 35GB of available disk storage is required.
 - GPU RAM: A minimum of 30GB GPU RAM is necessary. A GPU equivalent to or better than NVIDIA L40 should be sufficient.
 
-## Train adversarial images for LLaVA-7b-chat
-We show step-by-step how to generate adversarial images on LLaVA-7b-chat model. The pretrained lora weights can be downloaded from this [Hugging Face repo](https://huggingface.co/liuhaotian/llava-llama-2-7b-chat-lightning-lora-preview).
+## Train adversarial images for LLaVA-7b-chat by full patch noise perturbation
+We show step-by-step how to generate adversarial images on LLaVA-7b-chat model. The pretrained lora weights can be downloaded from this [Hugging Face repo](https://huggingface.co/liuhaotian/llava-llama-2-7b-chat-lightning-lora-preview). The default setting would be training the adversaries by adding noise to the whole patch by epsilon constraint.
 
 To train these images, first download the LLaVA checkpoint:
 ```bash
@@ -57,6 +57,26 @@ poetry run python run.py train \
 --wandb_project YOUR_WANDB_PROJECT \
 --no-playground
 ```
+
+## Train adversarial images for LLaVA-7b-chat by static and moving patches
+To train the adversaries by static and moving patches, we simply need to change the following function [sweep_patches](https://github.com/leocheung1001/image-hijacks-capstone/blob/8293c03d5ddcf529df8d3f3c134413a3626dd5a2/experiments/exp_demo_imgs/config.py#L134).
+
+```python
+def sweep_patches(cur_keys: List[str]) -> List[Transform]:
+    return [
+        Transform(
+            [
+                cfg.proc_learnable_image,
+                lambda c: cfg.set_input_image(c, EIFFEL_IMAGE),
+            ],
+            "pat_full",
+        )
+    ]
+```
+
+Here, we can change `cfg.proc_learnable_image` to `cfg.proc_patch_static` for static patches or `cfg.proc_patch_random_loc` for moving patches. These functions can be found in code [config.py](https://github.com/leocheung1001/image-hijacks-capstone/blob/8293c03d5ddcf529df8d3f3c134413a3626dd5a2/image_hijacks/config.py#L272).
+
+
 
 ## Reference
 ```bibtex
