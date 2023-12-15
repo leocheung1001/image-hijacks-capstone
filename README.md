@@ -76,6 +76,10 @@ def sweep_patches(cur_keys: List[str]) -> List[Transform]:
 
 Here, we can change `cfg.proc_learnable_image` to `cfg.proc_patch_static` for static patches or `cfg.proc_patch_random_loc` for moving patches. These functions can be found in code [config.py](https://github.com/leocheung1001/image-hijacks-capstone/blob/8293c03d5ddcf529df8d3f3c134413a3626dd5a2/image_hijacks/config.py#L272).
 
+## Generate Defense Images
+
+
+## Visualize Image Embeddings
 
 
 ## Reference
