@@ -77,9 +77,25 @@ def sweep_patches(cur_keys: List[str]) -> List[Transform]:
 Here, we can change `cfg.proc_learnable_image` to `cfg.proc_patch_static` for static patches or `cfg.proc_patch_random_loc` for moving patches. These functions can be found in code [config.py](https://github.com/leocheung1001/image-hijacks-capstone/blob/8293c03d5ddcf529df8d3f3c134413a3626dd5a2/image_hijacks/config.py#L272).
 
 ## Generate Defense Images
+To apply defense mechanisms to adversarial images, navigate to the `notebooks/image_defense.ipynb` notebook. There is an option to choose between six defenses:
 
+1. Rescaling / Resizing
+2. JPEG Compression
+3. Cropping
+4. Gaussian Noise
+5. Color Bit Depth Reduction
+6. Total Variation Denoising
 
-## Visualize Image Embeddings
+Follow the notebook comments to generate defense images.
+
+## Visualizations For Better Interpretability
+For better interpretability, visualizations are created to examine the locations of clean, adversarial, and defense images in the embedding space as well as highlighting important regions of the images. Three types of visualizations are generated: 
+
+1. PCA Plots of Clean, Adversarial, and Defense Image Embeddings (in the `notebooks/image_embedding_7b.ipynb` notebook)
+2. Histograms of L2-Norm and Cosine Similarities of Clean, Adversarial, and Defense Image Embeddings (in the `notebooks/image_embedding_7b.ipynb` notebook)
+3. Saliency Maps of Clean and Adversarial Images (in the `notebooks/saliency-map-experiment.ipynb` notebook)
+
+Follow the notebook comments to create relevant visualizations.
 
 
 ## Reference
